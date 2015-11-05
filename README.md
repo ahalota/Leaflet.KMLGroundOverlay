@@ -5,7 +5,7 @@ A leaflet plugin to display network-linked, tiled KML GroundOverlays.
 
 ##Example 1##
 
-**I can't figure out how to link to a functional copy of the example. Can anyone help?**
+**I can't figure out how to link to an on-line copy of the example. Can anyone help?**
 
 This plugin is currently only functional for jpg/png images which follow the same format as those of the sample data. It assumes a group of GroundOverlay tiles, with 2^n tiles for each level n.
 
