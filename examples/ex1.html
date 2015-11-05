@@ -3,8 +3,8 @@
 		<title>Leaflet KML GroundOverlay: Example #1</title>
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 		<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
-		<script src="../lib/L.ImageTransform.js"></script>
-		<script src="../src/Leaflet.KMLGroundOverlay.js"></script>
+		<script src="http://rawgit.com/ahalota/Leaflet.KMLGroundOverlay/lib/L.ImageTransform.js"></script>
+		<script src="http://rawgit.com/ahalota/Leaflet.KMLGroundOverlay/src/Leaflet.KMLGroundOverlay.js"></script>
 		
 		<script>
 		var kml, map;
@@ -12,7 +12,7 @@
 			var osm = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {maxZoom: 18});
 			map = L.map('map', {layers: [osm], center: new L.LatLng(36.25014, -76.455332), zoom: 15});
 
-			var kmlDir = "data/perquimans/l0s0_CHM/";
+			var kmlDir = "http://rawgit.com/ahalota/Leaflet.KMLGroundOverlay/data/perquimans/l0s0_CHM/";
 			
 			kml = new L.KMLGroundOverlay(kmlDir, {opacity: 0.7}).addTo(map);
 		}
