@@ -59,16 +59,24 @@
         _getType: function(){
         	var request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
         	
-        	request.open('GET', this._url+"/0/0/0.jpg", false);
-        	request.send(); 
-        	if (request.status !== 404)
-        		return "jpg";
+        	try{
+        		request.open('GET', this._url+"/0/0/0.jpg", false);
+        		request.send(); 
+        		if (request.status !== 404)
+        			return "jpg";
+        	}
+        	catch (e) {
+        		//do nothing
+        	}
         	
-           	request.open('GET', this._url+"/0/0/0.png", false);
-        	request.send(); 
-        	if (request.status !== 404)
-        		return "png";
-        	
+        	try{
+        		request.open('GET', this._url+"/0/0/0.png", false);
+	        	request.send(); 
+	        	if (request.status !== 404)
+	        		return "png";
+        	} catch (e) {
+        		//do nothing
+        	}	
         	else
         		console.log("Could not determine file type.");
        		return "ERROR";
