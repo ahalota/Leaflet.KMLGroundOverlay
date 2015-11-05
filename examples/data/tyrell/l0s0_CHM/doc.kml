@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+	<Document>
+		<name>l0s0_CHM</name>
+		<description></description>
+		<styleUrl>#hideChildrenStyle</styleUrl>
+		<Style id="hideChildrenStyle">
+			<ListStyle id="hideChildren">
+				<listItemType>checkHideChildren</listItemType>
+			</ListStyle>
+		</Style>
+		<NetworkLink>
+			<open>1</open>
+			<Region>
+				<LatLonAltBox>
+					<north>35.837883</north>
+					<south>35.802337</south>
+					<east>-76.201710</east>
+					<west>-76.216712</west>
+				</LatLonAltBox>
+				<Lod>
+					<minLodPixels>43</minLodPixels>
+					<maxLodPixels>-1</maxLodPixels>
+				</Lod>
+			</Region>
+			<Link>
+				<href>0/0/0.kml</href>
+				<viewRefreshMode>onRegion</viewRefreshMode>
+			</Link>
+		</NetworkLink>
+	</Document>
+</kml>
