@@ -12,7 +12,7 @@
 			var osm = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {maxZoom: 18});
 			map = L.map('map', {layers: [osm], center: new L.LatLng(36.25014, -76.455332), zoom: 15});
 
-			var kmlDir = "http://rawgit.com/ahalota/Leaflet.KMLGroundOverlay/master/data/perquimans/l0s0_CHM/";
+			var kmlDir = "http://rawgit.com/ahalota/Leaflet.KMLGroundOverlay/master/examples/data/perquimans/l0s0_CHM/";
 			
 			kml = new L.KMLGroundOverlay(kmlDir, {opacity: 0.7}).addTo(map);
 		}
