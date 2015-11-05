@@ -77,8 +77,8 @@
         	} catch (e) {
         		//do nothing
         	}	
-        	else
-        		console.log("Could not determine file type.");
+
+       		console.log("Could not determine file type.");
        		return "ERROR";
         },
         
