@@ -24,7 +24,7 @@
     		opacity: 1,
     		adjust: false,
     		//minZoom
-    		//maxZoom
+    		//maxZoom 
     		//numLevels
     		//unloadInvisibleTiles
     		//fileType
