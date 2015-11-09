@@ -40,7 +40,7 @@
         	this._anchors = this._getAnchors(this._url+"/0/0/0.kml");   
         	this._levelAtZoom = {}; //So we don't have to repeat work
         	this._curLevel = -1; //Default? maybe not needed here.
-        	this._type = this._getType();
+        	this._fileType = this._getFileType();
         	this.numLevels = this.getNumLevels();
         	this._levels = Array.apply(null, Array(this.numLevels)).map(function () { return L.layerGroup();}); 
         	        	        	
@@ -68,7 +68,7 @@
         	return this.options.opacity;
         },
         
-        _getType: function(){
+        _getFileType: function(){
         	var request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
         	
         	if (this.options.fileType) {
@@ -221,7 +221,7 @@
         	var xhr = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
         	
         	while(xhr.status != 404 && numLevels < this.options.numLevels){
-        		var url = this._url+"/"+(numLevels)+"/";
+        		var url = this._url+"/"+(numLevels)+"/0/0."+this._fileType;
         		xhr.onerror = function() { /*do nothing*/};
             	xhr.open('HEAD', url, false);
             	xhr.send();        		
@@ -255,7 +255,7 @@
         },
         
         _getImg : function(level, col,row){
-        	return this._url+"/"+level+"/"+col+"/"+row+"."+this._type;
+        	return this._url+"/"+level+"/"+col+"/"+row+"."+this._fileType;
         },
         
         //(0,0) in bottom left corner of img
