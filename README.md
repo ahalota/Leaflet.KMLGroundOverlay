@@ -21,9 +21,13 @@ The option *minLod* is not accurately named, but indicates a minimum number of p
 
 ###Member Variables###
 
-- numLevels
 - options.opacity
-- options.minLod
+- options.minLod: Inaccurately named. This is minimum pixel length of y-side. 
+- options.adjust: Boolean. Whether to adjust tiles up/right by 0.5pixels to remove anti-aliasing gaps between tiles. Produces slight overlap if enabled.
+- options.fileType: Set this to disable automatic for for jpg/png images, which logs unavoidable 404 errors to console.
+- options.numLevels: Set this to disable automatic search for numLevels, which logs unavoidable 404 errors to console. Can also be used to limit max numLevels.
+- numLevels: Returns found or given number of levels.
+
 
 
 

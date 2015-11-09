@@ -21,8 +21,18 @@
     	options: {
     		minLod: 150,
     		maxLod: 2048,
-    		opacity: 1
+    		opacity: 1,
+    		adjust: false,
+    		//minZoom
+    		//maxZoom
+    		//numLevels
+    		//unloadInvisibleTiles
+    		//fileType
     	},
+    	
+    	//bringToFront: function()
+    	//bringToBack: function()
+    	
     	
         initialize: function (url, options) { // (String, LatLngBounds, Object)
         	this._url = url.replace(/\/+$/, '');
@@ -38,8 +48,8 @@
         },
         
         onAdd: function (map) {
-        	this._updateLevel();
-        	map.on('zoomend', this._updateLevel, this);
+        	this._drawLevel();
+        	map.on('zoomend', this._drawLevel, this);
         	return this;
         },
         
@@ -50,6 +60,8 @@
         		this._levels[this._curLevel].eachLayer(function(layer){layer.setOpacity(opacity);})
         		this._levels[this._curLevel].opacity = opacity;
         	}
+        	
+        	return this;
         },
         
         getOpacity: function(opacity){
@@ -58,6 +70,17 @@
         
         _getType: function(){
         	var request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+        	
+        	if (this.options.fileType) {
+        		try{
+        			request.open('GET', this._url+"/0/0/0."+this.options.fileType,false);
+        			request.send();
+        			if (request.status !== 404)
+        				return this.options.fileType;
+        		} catch (e){
+        			console.log("Could not find user-defined file type " + this.options.fileType + ". Searching for jpg/png instead.")
+        		}
+        	}
         	
         	try{
         		request.open('GET', this._url+"/0/0/0.jpg", false);
@@ -82,7 +105,7 @@
        		return "ERROR";
         },
         
-        _updateLevel: function(){
+        _drawLevel: function(){
         	var newLevel = this._getLevelAtZoom(map);
         	
         	if (newLevel != this._curLevel){
@@ -145,23 +168,29 @@
         	return this._levelAtZoom[curZoom];
         },
         
-        _buildLevel: function(level){       	       		
+        _buildLevel: function(level){       	      		
     		var newLevel = [];
    			var numRows, numCols;
    			numRows = numCols = Math.pow(2,level);
    			var curImg, curAnchor, nwLat, nwLon, swLat, swLon, neLat, neLon, seLat, seLon;
    			var anchorPoints = this._getTileAnchors(level);
+   			
+   			var xyAdjust = this.options.adjust ? this._getPixelAdjustments(map) : {"lat": 0, "lng" : 0};
+   			
    			for (var curRow = 0; curRow < numRows; curRow++){
    				
    				for (var curCol = 0; curCol < numCols; curCol++){
    					curImg = this._getImg(level,curCol,curRow);
    					
-   					nwLat = anchorPoints.sw_nw[curRow+1][0] * (1 - (curCol/numCols)) + anchorPoints.se_ne[curRow+1][0] * (curCol/numCols);
+   					nwLat = anchorPoints.sw_nw[curRow+1][0] * (1 - (curCol/numCols)) + anchorPoints.se_ne[curRow+1][0] * (curCol/numCols) + xyAdjust.lat;
    					nwLon = anchorPoints.sw_nw[curRow+1][1] * (1 - (curCol/numCols)) + anchorPoints.se_ne[curRow+1][1] * (curCol/numCols);
-   					neLat = anchorPoints.sw_nw[curRow+1][0] * (1 - ((curCol+1)/numCols)) + anchorPoints.se_ne[curRow+1][0] * ((curCol+1)/numCols);
-   					neLon = anchorPoints.sw_nw[curRow+1][1] * (1 - ((curCol+1)/numCols)) + anchorPoints.se_ne[curRow+1][1] * ((curCol+1)/numCols);
+   					
+   					neLat = anchorPoints.sw_nw[curRow+1][0] * (1 - ((curCol+1)/numCols)) + anchorPoints.se_ne[curRow+1][0] * ((curCol+1)/numCols) + xyAdjust.lat;
+   					neLon = anchorPoints.sw_nw[curRow+1][1] * (1 - ((curCol+1)/numCols)) + anchorPoints.se_ne[curRow+1][1] * ((curCol+1)/numCols) + xyAdjust.lng;
+   					
    					seLat = anchorPoints.sw_nw[curRow][0] * (1 - ((curCol+1)/numCols)) + anchorPoints.se_ne[curRow][0] * ((curCol+1)/numCols);
-   					seLon = anchorPoints.sw_nw[curRow][1] * (1 - ((curCol+1)/numCols)) + anchorPoints.se_ne[curRow][1] * ((curCol+1)/numCols);
+   					seLon = anchorPoints.sw_nw[curRow][1] * (1 - ((curCol+1)/numCols)) + anchorPoints.se_ne[curRow][1] * ((curCol+1)/numCols) +xyAdjust.lng;
+   					
    					swLat = anchorPoints.sw_nw[curRow][0] * (1 - (curCol/numCols)) + anchorPoints.se_ne[curRow][0] * (curCol/numCols);
    					swLon = anchorPoints.sw_nw[curRow][1] * (1 - (curCol/numCols)) + anchorPoints.se_ne[curRow][1] * (curCol/numCols);
    					
@@ -170,6 +199,16 @@
    				}
    			}	
     		return L.layerGroup(newLevel); 
+        },
+        
+        //0.5px at current zoom level translated to lat/lon coordinates to create tiny overlap to remove anti-aliasing gap between tiles.
+        //Creates a slight overlap now that's noticeable when opacity is lowered, but better than a constant gap?
+        _getPixelAdjustments: function(map){
+        	var start = map.containerPointToLatLng([1,1]);
+          	var end = map.containerPointToLatLng([1.5,1.5]);
+        	
+        	console.log("dif: " + (end.lat-start.lat) + " " + (end.lng-start.lng));
+        	return {"lat": Math.abs(end.lat-start.lat), "lng": Math.abs(end.lng-start.lng)};
         },
         
         //TODO: hide error message for file not found on past-last level
@@ -181,8 +220,9 @@
         	var numLevels = 0;
         	var xhr = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
         	
-        	while(xhr.status != 404){
+        	while(xhr.status != 404 && numLevels < this.options.numLevels){
         		var url = this._url+"/"+(numLevels)+"/";
+        		xhr.onerror = function() { /*do nothing*/};
             	xhr.open('HEAD', url, false);
             	xhr.send();        		
         		if (xhr.status === 200){ numLevels++; }
