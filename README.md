@@ -22,6 +22,7 @@ This plugin is currently only functional for images which follow the same format
 - adjust: Boolean. Whether to adjust tiles up/right by 0.5pixels to remove anti-aliasing gaps between tiles. Produces slight overlap if enabled.
 - fileType: Set this to disable automatic for for jpg/png images, which logs unavoidable 404 errors to console.
 - numLevels: Set this to disable automatic search for numLevels, which logs unavoidable 404 errors to console. Can also be used to limit max numLevels.
+- minFileSize: Set a minimum file size required for an image to be added as a tile. Use this when you have empty images in your tile structure that you want to ignore for efficiency.
 
 ###Member Variables###
 

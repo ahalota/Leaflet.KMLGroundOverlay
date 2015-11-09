@@ -23,6 +23,7 @@
     		maxLod: 2048,
     		opacity: 1,
     		adjust: false,
+    		//minFileSize
     		//minZoom
     		//maxZoom
     		//numLevels
@@ -180,8 +181,12 @@
    			for (var curRow = 0; curRow < numRows; curRow++){
    				
    				for (var curCol = 0; curCol < numCols; curCol++){
-   					curImg = this._getImg(level,curCol,curRow);
    					
+   					if (this.options.minFileSize && this._getImgSize(level,curCol,curRow) < this.options.minFileSize) 
+   						continue; // don't add "empty" images if minFileSize given
+   					
+   					var curImg = this._getImg(level,curCol,curRow);
+	   					
    					nwLat = anchorPoints.sw_nw[curRow+1][0] * (1 - (curCol/numCols)) + anchorPoints.se_ne[curRow+1][0] * (curCol/numCols) + xyAdjust.lat;
    					nwLon = anchorPoints.sw_nw[curRow+1][1] * (1 - (curCol/numCols)) + anchorPoints.se_ne[curRow+1][1] * (curCol/numCols);
    					
@@ -196,6 +201,7 @@
    					
    					curAnchor = [[nwLat,nwLon],[neLat,neLon],[seLat,seLon],[swLat,swLon]];
    					newLevel.push(L.imageTransform(curImg,curAnchor, this.options));
+   					
    				}
    			}	
     		return L.layerGroup(newLevel); 
@@ -256,6 +262,14 @@
         
         _getImg : function(level, col,row){
         	return this._url+"/"+level+"/"+col+"/"+row+"."+this._fileType;
+        },
+                
+        _getImgSize(level,col,row) {
+        	var url = this._url+"/"+level+"/"+col+"/"+row+"."+this._fileType;
+            var xhr = new XMLHttpRequest();
+            xhr.open("HEAD", url, false); 
+            xhr.send();
+            return parseInt(xhr.getResponseHeader("Content-Length"))
         },
         
         //(0,0) in bottom left corner of img
