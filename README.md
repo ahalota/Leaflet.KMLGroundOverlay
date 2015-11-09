@@ -3,11 +3,12 @@ A leaflet plugin to display network-linked, tiled KML GroundOverlays.
 
 *Dependencies:* This library makes use of [Leaflet.imageTransform](https://github.com/ScanEx/Leaflet.imageTransform)
 
+More details on [KML Super-Overlays](https://developers.google.com/kml/documentation/kml_21tutorial?csw=1#superoverlays).
+
 ##[Example 1](http://ahalota.github.io/Leaflet.KMLGroundOverlay/examples/ex1.html) ##
 
 This plugin is currently only functional for images which follow the same format as those of the sample data. It assumes a group of GroundOverlay tiles, with 2^n equally-sized tiles for each level n.
 
-More details on [KML Super-Overlays](https://developers.google.com/kml/documentation/kml_21tutorial?csw=1#superoverlays).
 
 ----------
 
