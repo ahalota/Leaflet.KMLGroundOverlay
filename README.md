@@ -1,4 +1,4 @@
-# Leaflet.KMLGroundOverlay
+# Leaflet.KMLGroundOverlay 
 A leaflet plugin to display network-linked, tiled KML GroundOverlays.
 
 *Dependencies:* This library makes use of [Leaflet.imageTransform](https://github.com/ScanEx/Leaflet.imageTransform)
