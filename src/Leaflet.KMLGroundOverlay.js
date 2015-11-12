@@ -163,7 +163,7 @@
 	               }
 	        	}      
         	}
-        	this._levelAtZoom[curZoom] = zoomLevel-2; //should not hit this?
+        	this._levelAtZoom[curZoom] = zoomLevel-1; //should not hit this?
         	return this._levelAtZoom[curZoom];
         },
         
