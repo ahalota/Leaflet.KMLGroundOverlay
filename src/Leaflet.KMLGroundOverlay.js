@@ -16,7 +16,7 @@
 }(function (L) {
 	
 	//implement your plugin
-    var KMLGroundOverlay = L.LayerGroup.extend({
+    var KMLGroundOverlay = L.FeatureGroup.extend({
     	
     	options: {
     		minLod: 150,
@@ -45,21 +45,25 @@
         	this._fileType = this._getFileType();
         	this.numLevels = this.getNumLevels();
         	        	        	
-        	L.LayerGroup.prototype.initialize.call(this,Array.apply(null, Array(this.numLevels)).map(function () { return L.layerGroup();}));
+        	L.FeatureGroup.prototype.initialize.call(this,Array.apply(null, Array(this.numLevels)).map(function () { return L.featureGroup();}));
         },
         
         onAdd: function (map) {
+        	this._map = map;
         	this._drawLevel();
         	map.on('zoomend', this._drawLevel, this);
         	return this;
         },
         
         onRemove: function (map) {
-        	if (this._curLevel !== -1){
-        		L.LayerGroup.prototype.onRemove.call(this.getLayers()[this._curLevel], map);
-        	}
         	map.off('zoomend', this._drawLevel, this);
-        },
+        	if (this._curLevel != -1){
+    			L.FeatureGroup.prototype.onRemove.call(this.getLayers()[this._curLevel], map);
+        	}
+        	this._curLevel = -1;
+        	this._map = null;
+    	},
+        
         
         setOpacity: function(opacity) {
         	this.options.opacity = parseFloat(opacity);
@@ -130,7 +134,7 @@
         					this.getLayers()[newLevel].addLayer(newLevelArray[i]);
         				}
         			}
-        			L.LayerGroup.prototype.onAdd.call(this.getLayers()[newLevel], map);
+        			L.FeatureGroup.prototype.onAdd.call(this.getLayers()[newLevel], map);
         			if (this.getLayers()[newLevel].opacity != this.options.opacity){
         				var opacity = this.options.opacity;
         				this.getLayers()[newLevel].eachLayer(function(layer){ 
@@ -142,7 +146,7 @@
         		}
         		
         		if (this._curLevel != -1){
-        			L.LayerGroup.prototype.onRemove.call(this.getLayers()[this._curLevel], map);
+        			L.FeatureGroup.prototype.onRemove.call(this.getLayers()[this._curLevel], map);
         		}
         	}
         	
