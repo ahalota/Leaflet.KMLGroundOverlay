@@ -44,9 +44,9 @@
         	this._curLevel = -1; //Default? maybe not needed here.
         	this._fileType = this._getFileType();
         	this.numLevels = this.getNumLevels();
-        	this._levels = Array.apply(null, Array(this.numLevels)).map(function () { return L.layerGroup();}); 
+        	this._layers = Array.apply(null, Array(this.numLevels)).map(function () { return L.layerGroup();}); 
         	        	        	
-        	L.LayerGroup.prototype.initialize.call(this,this._levels);
+        	L.LayerGroup.prototype.initialize.call(this,this._layers);
         },
         
         onAdd: function (map) {
@@ -59,8 +59,12 @@
         	this.options.opacity = opacity;
         	
         	if (this._curLevel != -1){
-        		this._levels[this._curLevel].eachLayer(function(layer){layer.setOpacity(opacity);})
-        		this._levels[this._curLevel].opacity = opacity;
+        		this.getLayers()[this._curLevel].eachLayer(function(layer){
+        			layer.eachLayer(function(lay){
+        			lay.setOpacity(opacity);
+        			});
+        		});
+        		this.getLayers()[this._curLevel].opacity = opacity;
         	}
         	
         	return this;
@@ -112,20 +116,24 @@
         	
         	if (newLevel != this._curLevel){
         		if (newLevel !== -1){
-        			if (this._levels[newLevel].getLayers().length == 0){
-        				this._levels[newLevel] = this._buildLevel(newLevel);
+        			if (this.getLayers()[newLevel].getLayers().length == 0){
+        				this.getLayers()[newLevel].addLayer(this._buildLevel(newLevel));
         			}
-        			L.LayerGroup.prototype.onAdd.call(this._levels[newLevel], map);
-        			if (this._levels[newLevel].oopacity != this.options.opacity){
+        			L.LayerGroup.prototype.onAdd.call(this.getLayers()[newLevel], map);
+        			if (this.getLayers()[newLevel].opacity != this.options.opacity){
         				var opacity = this.options.opacity;
-        				this._levels[newLevel].eachLayer(function(layer){ layer.setOpacity(opacity);});
-        				this._levels[newLevel].opacity = this.options.opacity;
+        				this.getLayers()[newLevel].eachLayer(function(layer){ 
+        					layer.eachLayer(function(lay){
+        						lay.setOpacity(opacity);
+        					});
+        				});
+        				this.getLayers()[newLevel].opacity = this.options.opacity;
         			}
         			
         		}
         		
         		if (this._curLevel != -1){
-        			L.LayerGroup.prototype.onRemove.call(this._levels[this._curLevel], map);
+        			L.LayerGroup.prototype.onRemove.call(this.getLayers()[this._curLevel], map);
         		}
         	}
         	
