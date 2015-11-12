@@ -55,7 +55,7 @@
         },
         
         setOpacity: function(opacity) {
-        	this.options.opacity = opacity;
+        	this.options.opacity = parseFloat(opacity);
         	
         	if (this._curLevel != -1){
         		this.getLayers()[this._curLevel].eachLayer(function(layer){
