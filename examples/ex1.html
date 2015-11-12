@@ -18,8 +18,10 @@
 			kml = new L.KMLGroundOverlay(kmlDir, {
 				opacity: 0.7,
 				numLevels: 5,
-				fileType: 'png',	//In my case, empty files are 374 bites, so I don't want to build their tiles pointlessly and they are ignored.
-				minFileSize: 375}).addTo(map);
+				fileType: 'png',	
+				minZoom: 9,
+				minFileSize: 375 //In my case, empty files are 374 bites, so I don't want to build their tiles pointlessly and they are ignored.
+				}).addTo(map);
 			
 			
 		}

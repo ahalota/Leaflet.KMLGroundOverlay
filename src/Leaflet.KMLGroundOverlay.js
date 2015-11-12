@@ -23,6 +23,7 @@
     		maxLod: 2048,
     		opacity: 1,
     		adjust: false,
+    		numLevels: 99, //impossibly high for my uses
     		//minFileSize
     		//minZoom
     		//maxZoom
@@ -155,10 +156,10 @@
 	            	   zoomLevel++;
 	               } else {
 	               	//console.log("ZoomLevel: " + zoomLevel);
-	               	if (zoomLevel == 0){
-	               		if (oneSide < this.options.minLod/4){
+	               	if (zoomLevel == 0 && curZoom < this.options.minZoom){
+//	               		if (oneSide < this.options.minLod/4){
 	               			zoomLevel--; //Make it -1 to indicate don't show anything
-	               		}
+//	               		}
 	               	}
 	               	this._levelAtZoom[curZoom] = zoomLevel;
 	            	   return zoomLevel;
@@ -221,7 +222,7 @@
         getNumLevels: function(){
         	if (typeof this.numLevels !== 'undefined') {
         		return this.numLevels;
-        	}
+        	} 
         	
         	var numLevels = 0;
         	var xhr = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
