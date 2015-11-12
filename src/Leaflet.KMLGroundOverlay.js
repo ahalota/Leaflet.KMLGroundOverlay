@@ -66,9 +66,7 @@
         	
         	if (this._curLevel != -1){
         		this.getLayers()[this._curLevel].eachLayer(function(layer){
-        			layer.eachLayer(function(lay){
-        			lay.setOpacity(opacity);
-        			});
+        			layer.setOpacity(opacity);
         		});
         		this.getLayers()[this._curLevel].opacity = opacity;
         	}
@@ -78,6 +76,10 @@
         
         getOpacity: function(opacity){
         	return this.options.opacity;
+        },
+        
+        getLevel: function(lev){
+        	return this.getLayers()[lev];
         },
         
         _getFileType: function(){
@@ -123,15 +125,16 @@
         	if (newLevel != this._curLevel){
         		if (newLevel !== -1){
         			if (this.getLayers()[newLevel].getLayers().length == 0){
-        				this.getLayers()[newLevel].addLayer(this._buildLevel(newLevel));
+        				var newLevelArray = this._buildLevel(newLevel);
+        				for (var i = 0 ; i < newLevelArray.length; i++){
+        					this.getLayers()[newLevel].addLayer(newLevelArray[i]);
+        				}
         			}
         			L.LayerGroup.prototype.onAdd.call(this.getLayers()[newLevel], map);
         			if (this.getLayers()[newLevel].opacity != this.options.opacity){
         				var opacity = this.options.opacity;
         				this.getLayers()[newLevel].eachLayer(function(layer){ 
-        					layer.eachLayer(function(lay){
-        						lay.setOpacity(opacity);
-        					});
+       						layer.setOpacity(opacity);
         				});
         				this.getLayers()[newLevel].opacity = this.options.opacity;
         			}
@@ -216,7 +219,7 @@
    					
    				}
    			}	
-    		return L.layerGroup(newLevel); 
+    		return newLevel; 
         },
         
         //0.5px at current zoom level translated to lat/lon coordinates to create tiny overlap to remove anti-aliasing gap between tiles.
