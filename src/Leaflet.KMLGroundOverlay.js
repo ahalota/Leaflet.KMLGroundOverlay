@@ -137,6 +137,9 @@
         	
         	if (typeof (this._levelAtZoom[curZoom]) !== 'undefined'){
         		return this._levelAtZoom[curZoom];
+        	} else if (typeof (this.options.minZoom) !== 'undefined' && curZoom < this.options.minZoom){
+        		this._levelAtZoom[curZoom] = -1;
+        		return -1;
         	} else {
 	        	var zoomLevel = 0;
 	        	var squarePix;
@@ -155,18 +158,12 @@
 	               if (oneSide > this.options.minLod){
 	            	   zoomLevel++;
 	               } else {
-	               	//console.log("ZoomLevel: " + zoomLevel);
-	               	if (zoomLevel == 0 && curZoom < this.options.minZoom){
-//	               		if (oneSide < this.options.minLod/4){
-	               			zoomLevel--; //Make it -1 to indicate don't show anything
-//	               		}
-	               	}
-	               	this._levelAtZoom[curZoom] = zoomLevel;
-	            	   return zoomLevel;
+	            	   this._levelAtZoom[curZoom] = zoomLevel;
+	            	   	return zoomLevel;
 	               }
 	        	}      
         	}
-        	this._levelAtZoom[curZoom] = zoomLevel-2;
+        	this._levelAtZoom[curZoom] = zoomLevel-2; //should not hit this?
         	return this._levelAtZoom[curZoom];
         },
         
