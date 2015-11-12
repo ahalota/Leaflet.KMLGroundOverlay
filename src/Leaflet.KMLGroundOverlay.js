@@ -44,9 +44,8 @@
         	this._curLevel = -1; //Default? maybe not needed here.
         	this._fileType = this._getFileType();
         	this.numLevels = this.getNumLevels();
-        	this._layers = Array.apply(null, Array(this.numLevels)).map(function () { return L.layerGroup();}); 
         	        	        	
-        	L.LayerGroup.prototype.initialize.call(this,this._layers);
+        	L.LayerGroup.prototype.initialize.call(this,Array.apply(null, Array(this.numLevels)).map(function () { return L.layerGroup();}));
         },
         
         onAdd: function (map) {
