@@ -54,6 +54,13 @@
         	return this;
         },
         
+        onRemove: function (map) {
+        	if (this._curLevel !== -1){
+        		L.LayerGroup.prototype.onRemove.call(this.getLayers()[this._curLevel], map);
+        	}
+        	map.off('zoomend', this._drawLevel, this);
+        },
+        
         setOpacity: function(opacity) {
         	this.options.opacity = parseFloat(opacity);
         	
