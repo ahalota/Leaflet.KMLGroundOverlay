@@ -182,7 +182,6 @@
         		if (!map.hasLayer(layer)){
         			if (map.getBounds().intersects(layer._bounds)){
         				map.addLayer(layer);
-        				console.log(this);
         				if (isBack){
         					layer.bringToBack();
         				}
