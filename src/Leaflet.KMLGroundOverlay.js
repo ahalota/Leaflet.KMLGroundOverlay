@@ -180,12 +180,10 @@
         	this.getLayers()[this._curLevel].eachLayer(function(layer){
         		if (!map.hasLayer(layer)){
         			if (map.getBounds().intersects(layer._bounds)){
-        				console.log("Added " + layer._url);
         				map.addLayer(layer);
         			}
         		} else {
         			if (!map.getBounds().intersects(layer._bounds)){
-        				console.log("Removed " + layer._url);
         				map.removeLayer(layer);
         			}
         		}
