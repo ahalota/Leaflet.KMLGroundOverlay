@@ -24,17 +24,14 @@
     		opacity: 1,
     		adjust: false,
     		numLevels: 99, //impossibly high for my uses
+    		isBack: false,
     		//minFileSize
     		//minZoom
     		//maxZoom
     		//numLevels
-    		//unloadInvisibleTiles
+    		//unloadInvisibleTiles -- set via minFileSize, not needed
     		//fileType
-    	},
-    	
-    	//bringToFront: function()
-    	//bringToBack: function()
-    	
+    	},   	
     	
         initialize: function (url, options) { // (String, LatLngBounds, Object)
         	this._url = url.replace(/\/+$/, '');
@@ -44,6 +41,7 @@
         	this._curLevel = -1; //Default? maybe not needed here.
         	this._fileType = this._getFileType();
         	this.numLevels = this.getNumLevels();
+        	
         	        	        	
         	L.FeatureGroup.prototype.initialize.call(this,Array.apply(null, Array(this.numLevels)).map(function () { return L.featureGroup();}));
         },
@@ -82,8 +80,24 @@
         	return this.options.opacity;
         },
         
+        getBounds: function(){
+        	return L.bounds(this._anchors);
+        }
+        
         getLevel: function(lev){
         	return this.getLayers()[lev];
+        },
+        
+        bringToBack: function(){
+        	L.FeatureGroup.prototype.bringToBack.call(this,map);
+        	this.options.isBack = true;
+        	return this;
+        },
+        
+        bringToFront: function(){
+        	L.FeatureGroup.prototype.bringToFront.call(this,map);
+        	this.options.isBack = false;
+        	return this;
         },
         
         _getFileType: function(){
@@ -134,7 +148,12 @@
         					this.getLayers()[newLevel].addLayer(newLevelArray[i]);
         				}
         			}
+
         			L.FeatureGroup.prototype.onAdd.call(this.getLayers()[newLevel], map);
+        			if (this.options.isBack){
+        				this.getLayers()[newLevel].bringToBack();
+        			}
+        			
         			if (this.getLayers()[newLevel].opacity != this.options.opacity){
         				var opacity = this.options.opacity;
         				this.getLayers()[newLevel].eachLayer(function(layer){ 
