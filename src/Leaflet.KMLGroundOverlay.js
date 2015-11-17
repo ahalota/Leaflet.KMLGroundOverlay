@@ -82,7 +82,7 @@
         
         getBounds: function(){
         	return L.bounds(this._anchors);
-        }
+        },
         
         getLevel: function(lev){
         	return this.getLayers()[lev];
