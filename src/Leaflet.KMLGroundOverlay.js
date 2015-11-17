@@ -81,7 +81,8 @@
         },
         
         getBounds: function(){
-        	return L.bounds(this._anchors);
+        	var bounds = L.bounds(this._anchors);
+        	return L.latLngBounds([[bounds.max.x,bounds.max.y],[bounds.min.x,bounds.min.y]]);
         },
         
         getLevel: function(lev){
