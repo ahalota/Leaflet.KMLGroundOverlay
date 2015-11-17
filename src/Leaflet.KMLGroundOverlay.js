@@ -50,13 +50,13 @@
         	this._map = map;
         	this._drawLevel();
         	map.on('zoomend', this._drawLevel, this);
-        	map.on('move', this._onScreenTilesHandler, this);
+        	map.on('moveend', this._onScreenTilesHandler, this);
         	return this;
         },
         
         onRemove: function (map) {
         	map.off('zoomend', this._drawLevel, this);
-        	map.off('move', this._onScreenTilesHandler, this);
+        	map.off('moveend', this._onScreenTilesHandler, this);
         	if (this._curLevel != -1){
     			L.FeatureGroup.prototype.onRemove.call(this.getLayers()[this._curLevel], map);
         	}
@@ -177,10 +177,15 @@
         
         //Add/remove tiles based on whether they are visible
         _onScreenTilesHandler: function(){
+        	var isBack = this.options.isBack;
         	this.getLayers()[this._curLevel].eachLayer(function(layer){
         		if (!map.hasLayer(layer)){
         			if (map.getBounds().intersects(layer._bounds)){
         				map.addLayer(layer);
+        				console.log(this);
+        				if (isBack){
+        					layer.bringToBack();
+        				}
         			}
         		} else {
         			if (!map.getBounds().intersects(layer._bounds)){
