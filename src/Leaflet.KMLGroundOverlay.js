@@ -50,11 +50,13 @@
         	this._map = map;
         	this._drawLevel();
         	map.on('zoomend', this._drawLevel, this);
+        	map.on('move', this._onScreenTilesHandler, this);
         	return this;
         },
         
         onRemove: function (map) {
         	map.off('zoomend', this._drawLevel, this);
+        	map.off('move', this._onScreenTilesHandler, this);
         	if (this._curLevel != -1){
     			L.FeatureGroup.prototype.onRemove.call(this.getLayers()[this._curLevel], map);
         	}
@@ -62,6 +64,7 @@
         	this._map = null;
     	},
         
+    	
         
         setOpacity: function(opacity) {
         	this.options.opacity = parseFloat(opacity);
@@ -81,8 +84,7 @@
         },
         
         getBounds: function(){
-        	var bounds = L.bounds(this._anchors);
-        	return L.latLngBounds([[bounds.max.x,bounds.max.y],[bounds.min.x,bounds.min.y]]);
+        	return L.latLngBounds(this._anchors);
         },
         
         getLevel: function(lev){
@@ -171,6 +173,23 @@
         	}
         	
         	this._curLevel = newLevel;
+        },
+        
+        //Add/remove tiles based on whether they are visible
+        _onScreenTilesHandler: function(){
+        	this.getLayers()[this._curLevel].eachLayer(function(layer){
+        		if (!map.hasLayer(layer)){
+        			if (map.getBounds().intersects(layer._bounds)){
+        				console.log("Added " + layer._url);
+        				map.addLayer(layer);
+        			}
+        		} else {
+        			if (!map.getBounds().intersects(layer._bounds)){
+        				console.log("Removed " + layer._url);
+        				map.removeLayer(layer);
+        			}
+        		}
+        	});
         },
         
         _getLevelAtZoom: function(map){
