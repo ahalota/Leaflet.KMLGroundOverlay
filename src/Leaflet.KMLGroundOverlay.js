@@ -302,6 +302,7 @@
        	
        		xhr.onerror = function() { console.log("Error while getting XML.");	}
 
+       		xhr.overrideMimeType('text/xml'); //Needed for some servers to provide responseXML
        		xhr.open("GET", url, false);
        		xhr.send();
         		
@@ -324,12 +325,12 @@
         	return this._url+"/"+level+"/"+col+"/"+row+"."+this._fileType;
         },
                 
-        _getImgSize(level,col,row) {
+        _getImgSize : function(level,col,row) {
         	var url = this._url+"/"+level+"/"+col+"/"+row+"."+this._fileType;
             var xhr = new XMLHttpRequest();
             xhr.open("HEAD", url, false); 
             xhr.send();
-            return parseInt(xhr.getResponseHeader("Content-Length"))
+            return parseInt(xhr.getResponseHeader("Content-Length"));
         },
         
         //(0,0) in bottom left corner of img
